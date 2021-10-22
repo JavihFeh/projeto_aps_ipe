@@ -139,7 +139,7 @@ QPushButton:pressed {
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../Imagens/cil-x.png</normaloff>../Imagens/cil-x.png</iconset>
+              <normaloff>../../Imagens/cil-x.png</normaloff>../../Imagens/cil-x.png</iconset>
             </property>
            </widget>
           </item>
