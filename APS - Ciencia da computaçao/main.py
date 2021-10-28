@@ -2,7 +2,6 @@ from PyQt5 import  uic,QtWidgets
 import sqlite3
 import hashlib
 
-#Certo
 def chama_segunda_tela():
     nome_usuario = primeira_tela.lineEdit.text()
     senha = primeira_tela.lineEdit_2.text()
@@ -10,10 +9,9 @@ def chama_segunda_tela():
     if nome_usuario != "" and senha != "":
         nome_usuario_cript = hashlib.md5(nome_usuario.encode()).hexdigest()
         senha_user_cript = hashlib.md5(senha.encode()).hexdigest()
-        banco = sqlite3.connect('bancoCadastro.sql')
+        banco = sqlite3.connect('Banco de Dados/bancoCadastro.db')
         cursor = banco.cursor()
         try:
-            #Pega a senha do banco de dados e armazena na variavel senha_BD
             cursor.execute("SELECT senha text FROM cadastro WHERE login ='{}'".format(nome_usuario_cript))
             senha_BD = cursor.fetchall()    
 
@@ -49,7 +47,7 @@ def Fechar():
     segundaCasu_tela.close()
  
 def carregadados():
-    banco = sqlite3.connect('bancoCadastro.sql') 
+    banco = sqlite3.connect('Banco de Dados/bancoCadastro.db') 
     cursor = banco.cursor()
     cursor.execute("SELECT nome text FROM cadastro ")
     lista = cursor.fetchall()
@@ -87,16 +85,14 @@ def cadastrar():
     login = tela_cadastro.lineEdit_2.text()
     senha = tela_cadastro.lineEdit_3.text()
     c_senha = tela_cadastro.lineEdit_4.text()
-    #Verifica se a senha sao iguais
     if nome != "" and login != "" and senha != "":
         if (senha == c_senha ):
-            #conecta ao banco
             try:               
                 login_cript = hashlib.md5(login.encode()).hexdigest()
                 senha_cript = hashlib.md5(senha.encode()).hexdigest()
-                banco = sqlite3.connect('bancoCadastro.sql') 
+                banco = sqlite3.connect('Banco de Dados/bancoCadastro.db') 
                 cursor = banco.cursor()
-                #cria a tabela no banco
+
                 cursor.execute("CREATE TABLE IF NOT EXISTS cadastro (nome text NOT NULL UNIQUE, login text NOT NULL UNIQUE, senha text NOT NULL UNIQUE)")
                 cursor.execute("INSERT INTO cadastro VALUES ('"+nome+"','"+login_cript+"','"+senha_cript+"')")
 
@@ -119,7 +115,7 @@ def TelaExcluir():
     nome = segunda_tela.label_9.text()
     tela_Excluir.label_12.setText(nome)
 
-    banco = sqlite3.connect('bancoCadastro.sql') 
+    banco = sqlite3.connect('Banco de Dados/bancoCadastro.db') 
     cursor = banco.cursor()
     cursor.execute("SELECT nome text FROM cadastro ")
     lista = cursor.fetchall()
@@ -134,11 +130,11 @@ def TelaExcluir():
 def Excluir():
     segunda_tela.close()
     Nome_excluir = tela_Excluir.lineEdit.text()
-    banco = sqlite3.connect('bancoCadastro.sql') 
+    banco = sqlite3.connect('Banco de Dados/bancoCadastro.db') 
     cursor = banco.cursor()
     cursor.execute("DELETE FROM cadastro WHERE nome ='{}'".format(Nome_excluir))
     carregadados()
-    #DELETE FROM tbl_autores WHERE ID_Autor = 2;
+
     banco.commit()
     banco.close()
     tela_Excluir.label_3.setText("Usuario excluido!")
@@ -150,12 +146,12 @@ def Alterar():
 
 app=QtWidgets.QApplication([])
 #Declarando as telas
-primeira_tela=uic.loadUi("TelaLogin.ui")
-segunda_tela = uic.loadUi("TelaLogadoAdm.ui")
-segundaCasu_tela = uic.loadUi("TelaLogadoNormal.ui")
-tela_cadastro = uic.loadUi("TelaCadastro.ui")
-tela_Excluir = uic.loadUi("TelaExcluir.ui")
-tela_Alterar = uic.loadUi("TelaAlterar.ui")
+primeira_tela=uic.loadUi("interface/TelaLogin.ui")
+segunda_tela = uic.loadUi("interface/TelaLogadoAdm.ui")
+segundaCasu_tela = uic.loadUi("interface/TelaLogadoNormal.ui")
+tela_cadastro = uic.loadUi("interface/TelaCadastro.ui")
+tela_Excluir = uic.loadUi("interface/TelaExcluir.ui")
+tela_Alterar = uic.loadUi("interface/TelaAlterar.ui")
 
 #Tela Login
 primeira_tela.pushButton.clicked.connect(chama_segunda_tela)
